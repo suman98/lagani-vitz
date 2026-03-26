@@ -60,7 +60,7 @@ The system aggregates market data, financial reports, and company information, p
 - Node.js ≥ 18
 - PHP ≥ 8.1
 - Composer
-- MySQL ≥ 5.7
+- PostgreSQL
 - Nginx / Apache
 
 🎯 **Goal**
