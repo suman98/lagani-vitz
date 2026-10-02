@@ -7,6 +7,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use NepseAlpha\LaganiVitz\Filament\Pages\LaganiOverview;
 use NepseAlpha\LaganiVitz\Filament\Resources\LaganiPlans\LaganiPlanResource;
+use NepseAlpha\LaganiVitz\Filament\Resources\ShareOwnerships\ShareOwnershipResource;
 use NepseAlpha\LaganiVitz\Filament\Widgets\LaganiStatsWidget;
 
 /**
@@ -45,6 +46,7 @@ class LaganiVitzPlugin implements Plugin
             ])
             ->resources([
                 LaganiPlanResource::class,
+                ShareOwnershipResource::class,
             ])
             // Registered with Livewire only: the widget belongs to LaganiOverview and
             // must not leak onto the host panel's Dashboard (as ->widgets() would).
@@ -77,6 +79,11 @@ class LaganiVitzPlugin implements Plugin
                 ->icon('heroicon-o-rectangle-stack')
                 ->isActiveWhen(fn (): bool => request()->routeIs(LaganiPlanResource::getRouteBaseName().'.*'))
                 ->url(fn (): string => LaganiPlanResource::getUrl()),
+
+            NavigationItem::make('Share Ownership')
+                ->icon('heroicon-o-chart-pie')
+                ->isActiveWhen(fn (): bool => request()->routeIs(ShareOwnershipResource::getRouteBaseName().'.*'))
+                ->url(fn (): string => ShareOwnershipResource::getUrl()),
         ];
     }
 }
