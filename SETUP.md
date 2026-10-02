@@ -285,6 +285,27 @@ php artisan serve
 
 ---
 
+## Part 8 — Reflecting lagani-vitz changes into lagani-host
+
+The path repo is symlinked (`options: { symlink: true }`), so most edits inside
+`lagani-vitz/` reach `lagani-host` immediately with **no action needed**:
+
+- PHP code: models, Filament resources/pages/tables, controllers, migration *files* themselves.
+
+Some things still need a manual step, from `lagani-host/`:
+
+| Changed in lagani-vitz | Run in lagani-host |
+|---|---|
+| New/edited migration | `php artisan lagani-vitz:migrate` |
+| `config/lagani-vitz.php` (host already has its own published copy — a frozen snapshot) | `php artisan vendor:publish --tag=lagani-vitz-config --force` |
+| Frontend (`frontend/` Next.js source) | rebuild then republish: `cd ../lagani-vitz/frontend && npm run build`, then `php artisan vendor:publish --tag=lagani-vitz-assets --force` |
+| `composer.json` of the package (new dependency added) | `composer update nepsealpha/lagani-vitz` |
+
+After any change, a safe blanket step: `php artisan optimize:clear` (clears cached
+config/routes/views so stale cache doesn't hide the update).
+
+---
+
 ## Checklist
 
 - [ ] PHP 8.2+, Composer installed
