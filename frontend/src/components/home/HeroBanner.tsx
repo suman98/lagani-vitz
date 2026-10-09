@@ -1,54 +1,19 @@
-'use client';
-
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import himalaya from '@/images/banner.webp';
-import pokhara from '@/images/BannerPokhara.jpg';
-import skyline from '@/images/bannerSkyscaper.webp';
-import bull from '@/images/BannerBull.webp';
-
-const SLIDES = [
-  { src: himalaya, alt: 'Snow-covered Himalayan peaks under a clear blue sky', position: 'object-[62%_45%]' },
-  { src: pokhara, alt: 'Phewa Lake in Pokhara reflecting the Annapurna range', position: 'object-[50%_40%]' },
-  { src: skyline, alt: 'City skyline rising above a green park', position: 'object-[50%_60%]' },
-  { src: bull, alt: 'Illustration of a bull climbing a rising market chart', position: 'object-center' },
-];
-
-const INTERVAL_MS = 5000;
+import banner from '@/images/Banner.jpg';
 
 export function HeroBanner() {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    if (paused) return;
-    const id = setInterval(() => setIndex((i) => (i + 1) % SLIDES.length), INTERVAL_MS);
-    return () => clearInterval(id);
-  }, [paused]);
-
   return (
-    <section
-      aria-labelledby="hero-title"
-      aria-roledescription="carousel"
-      className="w-full px-2 pt-2"
-    >
-      <div className="relative h-[36svh] min-h-[240px] max-h-[380px] overflow-hidden rounded-md bg-forest-dark">
-        {SLIDES.map((slide, i) => (
-          <Image
-            key={slide.alt}
-            src={slide.src}
-            alt={slide.alt}
-            aria-hidden={i !== index}
-            fill
-            priority={i === 0}
-            sizes="100vw"
-            className={`object-cover ${slide.position} transition-opacity duration-1000 ease-in-out ${
-              i === index ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
-        ))}
-        {/* Uniform scrim: the slides range from deep sky to a pale illustration. */}
-        <div aria-hidden="true" className="absolute inset-0 bg-black/30" />
+    <section aria-labelledby="hero-title" className="w-full px-2 pt-2">
+      <div className="relative h-[44svh] min-h-[280px] max-h-[460px] overflow-hidden rounded-md bg-forest-dark">
+        <Image
+          src={banner}
+          alt="Kathmandu cityscape with the Himalayas behind"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[50%_35%]"
+        />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-black/45 to-black/25" />
 
         <div className="relative flex h-full flex-col items-center justify-center px-6 text-center">
           <p className="animate-fade-up text-xs font-medium tracking-[0.18em] text-white/85 uppercase sm:text-sm">
@@ -56,23 +21,11 @@ export function HeroBanner() {
           </p>
           <h1
             id="hero-title"
-            className="animate-fade-up mt-3 max-w-[14ch] text-4xl sm:max-w-none leading-[1.05] font-semibold tracking-tight text-white [animation-delay:80ms] sm:text-5xl lg:text-6xl"
+            className="animate-fade-up mt-3 max-w-[18ch] text-4xl leading-[1.05] font-semibold tracking-tight text-white [animation-delay:80ms] sm:text-5xl lg:text-6xl"
           >
             Value Investing Platform for Nepal Stock Market
           </h1>
-          
         </div>
-
-        <button
-          type="button"
-          onClick={() => setPaused((p) => !p)}
-          aria-label={paused ? 'Play slideshow' : 'Pause slideshow'}
-          className="focus-ring absolute right-3 bottom-3 flex h-8 w-8 items-center justify-center rounded-full text-white/80 transition-colors hover:text-white"
-        >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
-            {paused ? <path d="M2 1l9 5-9 5z" /> : <path d="M2 1h3v10H2zM7 1h3v10H7z" />}
-          </svg>
-        </button>
       </div>
     </section>
   );
