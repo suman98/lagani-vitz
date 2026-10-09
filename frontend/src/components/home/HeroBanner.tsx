@@ -21,10 +21,6 @@ export function HeroBanner() {
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setPaused(true);
-  }, []);
-
-  useEffect(() => {
     if (paused) return;
     const id = setInterval(() => setIndex((i) => (i + 1) % SLIDES.length), INTERVAL_MS);
     return () => clearInterval(id);
@@ -34,9 +30,9 @@ export function HeroBanner() {
     <section
       aria-labelledby="hero-title"
       aria-roledescription="carousel"
-      className="mx-auto w-full max-w-[1440px] sm:px-4 sm:pt-4"
+      className="w-full px-2 pt-2"
     >
-      <div className="relative h-[36svh] min-h-[240px] max-h-[380px] overflow-hidden bg-forest-dark sm:rounded-lg">
+      <div className="relative h-[36svh] min-h-[240px] max-h-[380px] overflow-hidden rounded-md bg-forest-dark">
         {SLIDES.map((slide, i) => (
           <Image
             key={slide.alt}
@@ -45,7 +41,7 @@ export function HeroBanner() {
             aria-hidden={i !== index}
             fill
             priority={i === 0}
-            sizes="(min-width: 1440px) 1440px, 100vw"
+            sizes="100vw"
             className={`object-cover ${slide.position} transition-opacity duration-1000 ease-in-out ${
               i === index ? 'opacity-100' : 'opacity-0'
             }`}
@@ -60,10 +56,11 @@ export function HeroBanner() {
           </p>
           <h1
             id="hero-title"
-            className="animate-fade-up mt-3 max-w-[14ch] text-4xl leading-[1.05] font-semibold tracking-tight text-white [animation-delay:80ms] sm:text-5xl lg:text-6xl"
+            className="animate-fade-up mt-3 max-w-[14ch] text-4xl sm:max-w-none leading-[1.05] font-semibold tracking-tight text-white [animation-delay:80ms] sm:text-5xl lg:text-6xl"
           >
-            Value Investing Platform
+            Value Investing Platform for Nepal Stock Market
           </h1>
+          
         </div>
 
         <button
