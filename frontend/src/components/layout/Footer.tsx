@@ -7,7 +7,7 @@ export function Footer() {
         <p>
           <span className="font-medium text-ink">Lagani Viz</span> · Value Investing Platform
         </p>
-        <p>© {new Date().getFullYear()} Lagani Viz. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Lagani Viz. All rights reserved. TEST GARYA HO</p>
       </PageContainer>
     </footer>
   );
