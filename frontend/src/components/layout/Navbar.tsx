@@ -88,7 +88,7 @@ export function Navbar() {
                     <Link
                       href={href}
                       aria-current={active ? 'page' : undefined}
-                      className={`focus-ring rounded-sm text-[15px] transition-colors duration-200 ${
+                      className={`focus-ring rounded-sm text-[16px] transition-colors duration-200 ${
                         active ? 'font-medium text-forest' : 'text-ink/70 hover:text-ink'
                       }`}
                     >
