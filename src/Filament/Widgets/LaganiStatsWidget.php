@@ -1,10 +1,10 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Filament\Widgets;
+namespace NepseAlpha\LaganiViz\Filament\Widgets;
 
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use NepseAlpha\LaganiVitz\Models\LaganiPlan;
+use NepseAlpha\LaganiViz\Models\LaganiPlan;
 
 class LaganiStatsWidget extends StatsOverviewWidget
 {

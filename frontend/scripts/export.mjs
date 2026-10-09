@@ -14,4 +14,4 @@ if (!existsSync(out)) {
 rmSync(dist, { recursive: true, force: true });
 cpSync(out, dist, { recursive: true });
 rmSync(out, { recursive: true, force: true });
-console.log(`LaganiVitz frontend exported to ${dist}`);
+console.log(`LaganiViz frontend exported to ${dist}`);

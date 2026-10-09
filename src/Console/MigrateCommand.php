@@ -1,9 +1,9 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Console;
+namespace NepseAlpha\LaganiViz\Console;
 
 use Illuminate\Console\Command;
-use NepseAlpha\LaganiVitz\Support\OwnDatabase;
+use NepseAlpha\LaganiViz\Support\OwnDatabase;
 
 /**
  * Runs the package migrations against the package's own database, so both the
@@ -13,13 +13,13 @@ use NepseAlpha\LaganiVitz\Support\OwnDatabase;
  */
 class MigrateCommand extends Command
 {
-    protected $signature = 'lagani-vitz:migrate
+    protected $signature = 'lagani-viz:migrate
         {--rollback : Roll back the last package migration batch}
         {--status : Show the status of the package migrations}
         {--pretend : Print the SQL instead of running it}
         {--force : Run in production without confirmation}';
 
-    protected $description = 'Run the LaganiVitz migrations on the package database (LAGANI_VITZ_DB_*)';
+    protected $description = 'Run the LaganiViz migrations on the package database (LAGANI_VIZ_DB_*)';
 
     public function handle(): int
     {

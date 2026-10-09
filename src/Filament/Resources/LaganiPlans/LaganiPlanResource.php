@@ -1,6 +1,6 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Filament\Resources\LaganiPlans;
+namespace NepseAlpha\LaganiViz\Filament\Resources\LaganiPlans;
 
 use BackedEnum;
 use Filament\Panel;
@@ -8,12 +8,12 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use NepseAlpha\LaganiVitz\Filament\Resources\LaganiPlans\Pages\CreateLaganiPlan;
-use NepseAlpha\LaganiVitz\Filament\Resources\LaganiPlans\Pages\EditLaganiPlan;
-use NepseAlpha\LaganiVitz\Filament\Resources\LaganiPlans\Pages\ListLaganiPlans;
-use NepseAlpha\LaganiVitz\Filament\Resources\LaganiPlans\Schemas\LaganiPlanForm;
-use NepseAlpha\LaganiVitz\Filament\Resources\LaganiPlans\Tables\LaganiPlansTable;
-use NepseAlpha\LaganiVitz\Models\LaganiPlan;
+use NepseAlpha\LaganiViz\Filament\Resources\LaganiPlans\Pages\CreateLaganiPlan;
+use NepseAlpha\LaganiViz\Filament\Resources\LaganiPlans\Pages\EditLaganiPlan;
+use NepseAlpha\LaganiViz\Filament\Resources\LaganiPlans\Pages\ListLaganiPlans;
+use NepseAlpha\LaganiViz\Filament\Resources\LaganiPlans\Schemas\LaganiPlanForm;
+use NepseAlpha\LaganiViz\Filament\Resources\LaganiPlans\Tables\LaganiPlansTable;
+use NepseAlpha\LaganiViz\Models\LaganiPlan;
 
 class LaganiPlanResource extends Resource
 {
@@ -30,12 +30,12 @@ class LaganiPlanResource extends Resource
     /** Mounted below the overview page: `/{panel}/lagani/plans`. */
     public static function getSlug(?Panel $panel = null): string
     {
-        return config('lagani-vitz.admin.slug', 'lagani').'/plans';
+        return config('lagani-viz.admin.slug', 'lagani').'/plans';
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return config('lagani-vitz.admin.navigation_group');
+        return config('lagani-viz.admin.navigation_group');
     }
 
     public static function form(Schema $schema): Schema

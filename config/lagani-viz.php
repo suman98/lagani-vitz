@@ -9,7 +9,7 @@ return [
     |
     | The Next.js app in `frontend/` is built as a static export. Laravel serves
     | its HTML shell at `/{path}`; the hashed JS/CSS chunks are published to
-    | `public/vendor/lagani-vitz` and served by the web server directly.
+    | `public/vendor/lagani-viz` and served by the web server directly.
     |
     | `path` must match the `basePath` the frontend was built with
     | (LAGANI_BASE_PATH, default "/lagani").
@@ -19,9 +19,9 @@ return [
     |
     */
     'frontend' => [
-        'enabled' => env('LAGANI_VITZ_FRONTEND_ENABLED', true),
-        'path' => env('LAGANI_VITZ_PATH', 'lagani'),
-        'dist_path' => env('LAGANI_VITZ_DIST_PATH'), // null = <package>/dist
+        'enabled' => env('LAGANI_VIZ_FRONTEND_ENABLED', true),
+        'path' => env('LAGANI_VIZ_PATH', 'lagani'),
+        'dist_path' => env('LAGANI_VIZ_DIST_PATH'), // null = <package>/dist
         'middleware' => [],
     ],
 
@@ -49,7 +49,7 @@ return [
     |
     */
     'admin' => [
-        'slug' => env('LAGANI_VITZ_ADMIN_SLUG', 'lagani'),
+        'slug' => env('LAGANI_VIZ_ADMIN_SLUG', 'lagani'),
         'navigation_group' => 'Lagani',
     ],
 
@@ -70,17 +70,17 @@ return [
     | Resolution, per side (deployment decides, all via env):
     |
     |   1. The host defines a connection named `connection` (default
-    |      "lagani_vitz" / "lagani_vitz_main") in its config/database.php:
+    |      "lagani_viz" / "lagani_viz_main") in its config/database.php:
     |      the package uses it. This is how the main app does it.
     |   2. else, when `config` is filled (`url` or `database` set, via env), the
     |      package registers that connection itself, with its own credentials.
     |      Use a read-only database user for `main`.
     |   3. else: `main` quietly uses the host's default connection (it is the
     |      host's own data). `own` has NO fallback: the package refuses to touch
-    |      any database until LAGANI_VITZ_DB_* is set, so its tables can never
+    |      any database until LAGANI_VIZ_DB_* is set, so its tables can never
     |      land in the main application's database by accident.
     |
-    | `own` migrations run through `php artisan lagani-vitz:migrate`, which keeps
+    | `own` migrations run through `php artisan lagani-viz:migrate`, which keeps
     | the tables and the `migrations` bookkeeping table in the package database.
     | They are not loaded into the host's plain `php artisan migrate`.
     |
@@ -91,17 +91,17 @@ return [
     */
     'database' => [
         'own' => [
-            'connection' => env('LAGANI_VITZ_DB_CONNECTION'),
+            'connection' => env('LAGANI_VIZ_DB_CONNECTION'),
             'config' => [
-                'driver' => env('LAGANI_VITZ_DB_DRIVER', 'pgsql'),
-                'url' => env('LAGANI_VITZ_DB_URL'),
-                'host' => env('LAGANI_VITZ_DB_HOST', '127.0.0.1'),
-                'port' => env('LAGANI_VITZ_DB_PORT', '5432'),
-                'database' => env('LAGANI_VITZ_DB_DATABASE'),
-                'username' => env('LAGANI_VITZ_DB_USERNAME'),
-                'password' => env('LAGANI_VITZ_DB_PASSWORD'),
-                'schema' => env('LAGANI_VITZ_DB_SCHEMA', 'public'),
-                'sslmode' => env('LAGANI_VITZ_DB_SSLMODE', 'prefer'),
+                'driver' => env('LAGANI_VIZ_DB_DRIVER', 'pgsql'),
+                'url' => env('LAGANI_VIZ_DB_URL'),
+                'host' => env('LAGANI_VIZ_DB_HOST', '127.0.0.1'),
+                'port' => env('LAGANI_VIZ_DB_PORT', '5432'),
+                'database' => env('LAGANI_VIZ_DB_DATABASE'),
+                'username' => env('LAGANI_VIZ_DB_USERNAME'),
+                'password' => env('LAGANI_VIZ_DB_PASSWORD'),
+                'schema' => env('LAGANI_VIZ_DB_SCHEMA', 'public'),
+                'sslmode' => env('LAGANI_VIZ_DB_SSLMODE', 'prefer'),
                 'charset' => 'utf8',
                 'prefix' => '',
             ],
@@ -112,24 +112,24 @@ return [
         ],
 
         'main' => [
-            'connection' => env('LAGANI_VITZ_MAIN_DB_CONNECTION'),
+            'connection' => env('LAGANI_VIZ_MAIN_DB_CONNECTION'),
             'config' => [
-                'driver' => env('LAGANI_VITZ_MAIN_DB_DRIVER', 'pgsql'),
-                'url' => env('LAGANI_VITZ_MAIN_DB_URL'),
-                'host' => env('LAGANI_VITZ_MAIN_DB_HOST', '127.0.0.1'),
-                'port' => env('LAGANI_VITZ_MAIN_DB_PORT', '5432'),
-                'database' => env('LAGANI_VITZ_MAIN_DB_DATABASE'),
-                'username' => env('LAGANI_VITZ_MAIN_DB_USERNAME'),
-                'password' => env('LAGANI_VITZ_MAIN_DB_PASSWORD'),
-                'schema' => env('LAGANI_VITZ_MAIN_DB_SCHEMA', 'public'),
-                'sslmode' => env('LAGANI_VITZ_MAIN_DB_SSLMODE', 'prefer'),
+                'driver' => env('LAGANI_VIZ_MAIN_DB_DRIVER', 'pgsql'),
+                'url' => env('LAGANI_VIZ_MAIN_DB_URL'),
+                'host' => env('LAGANI_VIZ_MAIN_DB_HOST', '127.0.0.1'),
+                'port' => env('LAGANI_VIZ_MAIN_DB_PORT', '5432'),
+                'database' => env('LAGANI_VIZ_MAIN_DB_DATABASE'),
+                'username' => env('LAGANI_VIZ_MAIN_DB_USERNAME'),
+                'password' => env('LAGANI_VIZ_MAIN_DB_PASSWORD'),
+                'schema' => env('LAGANI_VIZ_MAIN_DB_SCHEMA', 'public'),
+                'sslmode' => env('LAGANI_VIZ_MAIN_DB_SSLMODE', 'prefer'),
                 'charset' => 'utf8',
                 'prefix' => '',
             ],
             // logical name => table in the main database. Read through
             // MainDatabase::table('name') or a Models\Main\* model.
             'tables' => [
-                'live_prices' => env('LAGANI_VITZ_MAIN_TABLE_LIVE_PRICES', 'web_today_price'),
+                'live_prices' => env('LAGANI_VIZ_MAIN_TABLE_LIVE_PRICES', 'web_today_price'),
             ],
         ],
     ],

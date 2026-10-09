@@ -1,10 +1,10 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Models\Main;
+namespace NepseAlpha\LaganiViz\Models\Main;
 
 use Illuminate\Database\Eloquent\Model;
 use LogicException;
-use NepseAlpha\LaganiVitz\Support\MainDatabase;
+use NepseAlpha\LaganiViz\Support\MainDatabase;
 
 /**
  * Base for read-only models over the host application's database.
@@ -21,7 +21,7 @@ abstract class MainModel extends Model
 
     public function getConnectionName(): ?string
     {
-        return config('lagani-vitz.database.main.connection') ?: parent::getConnectionName();
+        return config('lagani-viz.database.main.connection') ?: parent::getConnectionName();
     }
 
     public function getTable(): string

@@ -1,6 +1,6 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Models\Main;
+namespace NepseAlpha\LaganiViz\Models\Main;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
  * (`App\Models\Prices\LivePrice`, table `web_today_price`).
  *
  * Table: `database.main.tables.live_prices`
- * (env LAGANI_VITZ_MAIN_TABLE_LIVE_PRICES, default `web_today_price`).
+ * (env LAGANI_VIZ_MAIN_TABLE_LIVE_PRICES, default `web_today_price`).
  *
  * Only the columns and scopes the package needs are mirrored. The host
  * model's relations (master data, score board, ...) point at host models and

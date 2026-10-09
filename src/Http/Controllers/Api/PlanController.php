@@ -1,10 +1,10 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Http\Controllers\Api;
+namespace NepseAlpha\LaganiViz\Http\Controllers\Api;
 
 use Illuminate\Http\JsonResponse;
-use NepseAlpha\LaganiVitz\Http\Resources\PlanResource;
-use NepseAlpha\LaganiVitz\Models\LaganiPlan;
+use NepseAlpha\LaganiViz\Http\Resources\PlanResource;
+use NepseAlpha\LaganiViz\Models\LaganiPlan;
 
 /**
  * The `{"data": ...}` envelope is built by hand: hosts may call

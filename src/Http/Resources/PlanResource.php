@@ -1,10 +1,10 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Http\Resources;
+namespace NepseAlpha\LaganiViz\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use NepseAlpha\LaganiVitz\Models\LaganiPlan;
+use NepseAlpha\LaganiViz\Models\LaganiPlan;
 
 /**
  * @mixin LaganiPlan

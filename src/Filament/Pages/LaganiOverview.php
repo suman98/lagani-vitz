@@ -1,11 +1,11 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Filament\Pages;
+namespace NepseAlpha\LaganiViz\Filament\Pages;
 
 use Filament\Pages\Page;
 use Filament\Panel;
-use NepseAlpha\LaganiVitz\Filament\Widgets\LaganiStatsWidget;
-use NepseAlpha\LaganiVitz\Support\FrontendShell;
+use NepseAlpha\LaganiViz\Filament\Widgets\LaganiStatsWidget;
+use NepseAlpha\LaganiViz\Support\FrontendShell;
 
 class LaganiOverview extends Page
 {
@@ -15,16 +15,16 @@ class LaganiOverview extends Page
 
     protected static ?string $title = 'Lagani';
 
-    protected string $view = 'lagani-vitz::filament.pages.lagani-overview';
+    protected string $view = 'lagani-viz::filament.pages.lagani-overview';
 
     public static function getSlug(?Panel $panel = null): string
     {
-        return config('lagani-vitz.admin.slug', 'lagani');
+        return config('lagani-viz.admin.slug', 'lagani');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return config('lagani-vitz.admin.navigation_group');
+        return config('lagani-viz.admin.navigation_group');
     }
 
     protected function getHeaderWidgets(): array
@@ -40,7 +40,7 @@ class LaganiOverview extends Page
     public function getFrontendInfo(): array
     {
         return [
-            'url' => url(config('lagani-vitz.frontend.path')),
+            'url' => url(config('lagani-viz.frontend.path')),
             'built' => app(FrontendShell::class)->isBuilt(),
         ];
     }

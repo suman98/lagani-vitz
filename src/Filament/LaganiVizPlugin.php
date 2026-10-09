@@ -1,24 +1,24 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Filament;
+namespace NepseAlpha\LaganiViz\Filament;
 
 use Filament\Contracts\Plugin;
 use Filament\Navigation\NavigationItem;
 use Filament\Panel;
-use NepseAlpha\LaganiVitz\Filament\Pages\LaganiOverview;
-use NepseAlpha\LaganiVitz\Filament\Resources\LaganiPlans\LaganiPlanResource;
-use NepseAlpha\LaganiVitz\Filament\Resources\ShareOwnerships\ShareOwnershipResource;
-use NepseAlpha\LaganiVitz\Filament\Widgets\LaganiStatsWidget;
+use NepseAlpha\LaganiViz\Filament\Pages\LaganiOverview;
+use NepseAlpha\LaganiViz\Filament\Resources\LaganiPlans\LaganiPlanResource;
+use NepseAlpha\LaganiViz\Filament\Resources\ShareOwnerships\ShareOwnershipResource;
+use NepseAlpha\LaganiViz\Filament\Widgets\LaganiStatsWidget;
 
 /**
  * Attach to a panel provider:
  *
- *     $panel->plugin(LaganiVitzPlugin::make())
+ *     $panel->plugin(LaganiVizPlugin::make())
  *
  * Pages and resources are mounted under `{panel path}/{admin.slug}`
  * (e.g. `/admin/v2/lagani`).
  */
-class LaganiVitzPlugin implements Plugin
+class LaganiVizPlugin implements Plugin
 {
     public static function make(): static
     {
@@ -35,7 +35,7 @@ class LaganiVitzPlugin implements Plugin
 
     public function getId(): string
     {
-        return 'lagani-vitz';
+        return 'lagani-viz';
     }
 
     public function register(Panel $panel): void

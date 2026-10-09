@@ -1,11 +1,11 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Models;
+namespace NepseAlpha\LaganiViz\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use NepseAlpha\LaganiVitz\Support\OwnDatabase;
+use NepseAlpha\LaganiViz\Support\OwnDatabase;
 
 /**
  * @property int $id
@@ -40,7 +40,7 @@ class LaganiPlan extends Model
 
     public function getTable(): string
     {
-        return config('lagani-vitz.database.own.tables.plans', 'lagani_plans');
+        return config('lagani-viz.database.own.tables.plans', 'lagani_plans');
     }
 
     public function getConnectionName(): ?string

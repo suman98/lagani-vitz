@@ -1,6 +1,6 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Filament\Resources\ShareOwnerships\Schemas;
+namespace NepseAlpha\LaganiViz\Filament\Resources\ShareOwnerships\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;

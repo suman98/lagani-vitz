@@ -1,6 +1,6 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Filament\Resources\ShareOwnerships\Tables;
+namespace NepseAlpha\LaganiViz\Filament\Resources\ShareOwnerships\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -10,7 +10,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use NepseAlpha\LaganiVitz\Models\ShareOwnership;
+use NepseAlpha\LaganiViz\Models\ShareOwnership;
 
 class ShareOwnershipsTable
 {

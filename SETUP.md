@@ -1,6 +1,6 @@
-# Lagani Vitz — Setup Guide (from zero)
+# Lagani Viz — Setup Guide (from zero)
 
-This repo is a **Laravel package** (`nepsealpha/lagani-vitz`), not a standalone app. It plugs into
+This repo is a **Laravel package** (`nepsealpha/lagani-viz`), not a standalone app. It plugs into
 a host Laravel + Filament application. Since nothing is installed yet, this guide starts from a
 bare machine and ends with the package running inside a fresh host app.
 
@@ -44,7 +44,7 @@ composer -V
 
 ## Part 1 — Create the host Laravel app
 
-The package needs something to live inside. Create it as a **sibling folder** of `lagani-vitz/`
+The package needs something to live inside. Create it as a **sibling folder** of `lagani-viz/`
 (not inside it):
 
 ```bash
@@ -76,7 +76,7 @@ php artisan serve
 
 ---
 
-## Part 2 — Install the lagani-vitz package into the host app
+## Part 2 — Install the lagani-viz package into the host app
 
 Since this package isn't published to Packagist, point Composer at the local folder with a path
 repository. In **`lagani-host/composer.json`**, add:
@@ -84,10 +84,10 @@ repository. In **`lagani-host/composer.json`**, add:
 ```json
 {
   "repositories": [
-    { "type": "path", "url": "../lagani-vitz", "options": { "symlink": true } }
+    { "type": "path", "url": "../lagani-viz", "options": { "symlink": true } }
   ],
   "require": {
-    "nepsealpha/lagani-vitz": "@dev"
+    "nepsealpha/lagani-viz": "@dev"
   }
 }
 ```
@@ -95,7 +95,7 @@ repository. In **`lagani-host/composer.json`**, add:
 Then, from `lagani-host/`:
 
 ```bash
-composer update nepsealpha/lagani-vitz
+composer update nepsealpha/lagani-viz
 ```
 
 The service provider is auto-discovered — nothing else to register.
@@ -103,35 +103,35 @@ The service provider is auto-discovered — nothing else to register.
 Attach the plugin to the panel. Open `app/Providers/Filament/AdminPanelProvider.php` and add:
 
 ```php
-use NepseAlpha\LaganiVitz\Filament\LaganiVitzPlugin;
+use NepseAlpha\LaganiViz\Filament\LaganiVizPlugin;
 
 // inside the ->panel(...) chain:
-->plugin(LaganiVitzPlugin::make())
+->plugin(LaganiVizPlugin::make())
 ```
 
 ---
 
 ## Part 3 — Why two databases (what your senior means)
 
-This is already designed into the package — [config/lagani-vitz.php](config/lagani-vitz.php) — you
+This is already designed into the package — [config/lagani-viz.php](config/lagani-viz.php) — you
 just need to configure it, not build it.
 
 | Connection | Holds | Env prefix | Access |
 |---|---|---|---|
-| **own** | the package's own table(s): `lagani_plans` | `LAGANI_VITZ_DB_*` | read + write (migrations run here) |
-| **main** | the host app's existing data (stocks, prices, ...) | `LAGANI_VITZ_MAIN_DB_*` | **read-only** |
+| **own** | the package's own table(s): `lagani_plans` | `LAGANI_VIZ_DB_*` | read + write (migrations run here) |
+| **main** | the host app's existing data (stocks, prices, ...) | `LAGANI_VIZ_MAIN_DB_*` | **read-only** |
 
 Why split them: the package must never accidentally write into the main app's data, and in
 production the two may sit on different DB servers entirely. No foreign keys, no cross-database
 joins — the package reads `main` rows in PHP and combines them itself.
 
 **Resolution order** (decided per side by env, checked in this order):
-1. Host app already defines a connection named `lagani_vitz` / `lagani_vitz_main` in its own
+1. Host app already defines a connection named `lagani_viz` / `lagani_viz_main` in its own
    `config/database.php` → package uses that connection as-is.
-2. Else, if `LAGANI_VITZ_DB_DATABASE` (or `_URL`) is set → package registers its own connection
-   from `LAGANI_VITZ_DB_*` env vars.
+2. Else, if `LAGANI_VIZ_DB_DATABASE` (or `_URL`) is set → package registers its own connection
+   from `LAGANI_VIZ_DB_*` env vars.
 3. Else: `main` quietly falls back to the host's default DB connection. `own` has **no fallback**
-   — until `LAGANI_VITZ_DB_*` is set, touching it throws `"The LaganiVitz database is not
+   — until `LAGANI_VIZ_DB_*` is set, touching it throws `"The LaganiViz database is not
    configured."` This is intentional, so the package's tables can never land in the wrong database
    by accident.
 
@@ -148,7 +148,7 @@ package code changes, only env vars.
 
 ```bash
 sudo -u postgres createuser --superuser $USER   # only if your OS user has no Postgres role yet
-createdb lagani_vitz        # package's own database
+createdb lagani_viz        # package's own database
 createdb lagani_host_main   # stand-in for "the main app's database"
 ```
 
@@ -177,24 +177,24 @@ DB_DATABASE=lagani_host_main
 DB_USERNAME=postgres
 DB_PASSWORD=
 
-# --- lagani-vitz package's own database ---
-LAGANI_VITZ_DB_HOST=127.0.0.1
-LAGANI_VITZ_DB_PORT=5432
-LAGANI_VITZ_DB_DATABASE=lagani_vitz
-LAGANI_VITZ_DB_USERNAME=postgres
-LAGANI_VITZ_DB_PASSWORD=
+# --- lagani-viz package's own database ---
+LAGANI_VIZ_DB_HOST=127.0.0.1
+LAGANI_VIZ_DB_PORT=5432
+LAGANI_VIZ_DB_DATABASE=lagani_viz
+LAGANI_VIZ_DB_USERNAME=postgres
+LAGANI_VIZ_DB_PASSWORD=
 
-# --- lagani-vitz package's read-only view of the "main" database ---
-LAGANI_VITZ_MAIN_DB_HOST=127.0.0.1
-LAGANI_VITZ_MAIN_DB_PORT=5432
-LAGANI_VITZ_MAIN_DB_DATABASE=lagani_host_main
-LAGANI_VITZ_MAIN_DB_USERNAME=lagani_readonly
-LAGANI_VITZ_MAIN_DB_PASSWORD=change-me
+# --- lagani-viz package's read-only view of the "main" database ---
+LAGANI_VIZ_MAIN_DB_HOST=127.0.0.1
+LAGANI_VIZ_MAIN_DB_PORT=5432
+LAGANI_VIZ_MAIN_DB_DATABASE=lagani_host_main
+LAGANI_VIZ_MAIN_DB_USERNAME=lagani_readonly
+LAGANI_VIZ_MAIN_DB_PASSWORD=change-me
 ```
 
-Note `DB_DATABASE` and `LAGANI_VITZ_MAIN_DB_DATABASE` point at the **same** database here — that's
+Note `DB_DATABASE` and `LAGANI_VIZ_MAIN_DB_DATABASE` point at the **same** database here — that's
 the point: `main` is just "wherever the host app's data already lives." The package's `own` data
-(`lagani_vitz`) stays physically separate.
+(`lagani_viz`) stays physically separate.
 
 Run the host app's own migrations too (users table, etc.), using the superuser creds from
 `DB_*`:
@@ -206,26 +206,26 @@ php artisan migrate
 ### Step 4 — run the package's migrations
 
 ```bash
-php artisan lagani-vitz:migrate              # creates lagani_plans on the `own` connection
-php artisan lagani-vitz:migrate --status     # check what ran
+php artisan lagani-viz:migrate              # creates lagani_plans on the `own` connection
+php artisan lagani-viz:migrate --status     # check what ran
 ```
 
-This touches only `lagani_vitz`, never `lagani_host_main`.
+This touches only `lagani_viz`, never `lagani_host_main`.
 
 ### Step 5 — (optional) register main-app tables to read from the package
 
-Edit `config/lagani-vitz.php` → `database.main.tables`:
+Edit `config/lagani-viz.php` → `database.main.tables`:
 
 ```php
 'tables' => [
-    'live_prices' => env('LAGANI_VITZ_MAIN_TABLE_LIVE_PRICES', 'web_today_price'),
+    'live_prices' => env('LAGANI_VIZ_MAIN_TABLE_LIVE_PRICES', 'web_today_price'),
 ],
 ```
 
 Read it with:
 
 ```php
-use NepseAlpha\LaganiVitz\Support\MainDatabase;
+use NepseAlpha\LaganiViz\Support\MainDatabase;
 
 MainDatabase::table('live_prices')->where('symbol', 'NABIL')->first();
 ```
@@ -239,11 +239,11 @@ Or build a dedicated read-only model under `src/Models/Main/` extending `MainMod
 
 ```bash
 cd /home/arbin/lagani-host
-php artisan vendor:publish --tag=lagani-vitz-config    # optional, copies config file to host
-php artisan vendor:publish --tag=lagani-vitz-assets    # required, copies built frontend JS/CSS
+php artisan vendor:publish --tag=lagani-viz-config    # optional, copies config file to host
+php artisan vendor:publish --tag=lagani-viz-assets    # required, copies built frontend JS/CSS
 ```
 
-If this errors with `503: LaganiVitz frontend is not built`, the package's `dist/` is empty — do
+If this errors with `503: LaganiViz frontend is not built`, the package's `dist/` is empty — do
 Part 6 first.
 
 ---
@@ -251,7 +251,7 @@ Part 6 first.
 ## Part 6 — Build the frontend (Next.js)
 
 ```bash
-cd /home/arbin/lagani-vitz/frontend
+cd /home/arbin/lagani-viz/frontend
 cp .env.example .env.local
 npm install
 npm run build          # outputs to ../dist
@@ -261,13 +261,13 @@ Then, back in the host app:
 
 ```bash
 cd /home/arbin/lagani-host
-php artisan vendor:publish --tag=lagani-vitz-assets --force
+php artisan vendor:publish --tag=lagani-viz-assets --force
 ```
 
 For live frontend development instead of a one-off build:
 
 ```bash
-cd /home/arbin/lagani-vitz/frontend
+cd /home/arbin/lagani-viz/frontend
 npm run dev            # http://localhost:3100/lagani, proxies API to LARAVEL_URL in .env.local
 ```
 
@@ -285,21 +285,21 @@ php artisan serve
 
 ---
 
-## Part 8 — Reflecting lagani-vitz changes into lagani-host
+## Part 8 — Reflecting lagani-viz changes into lagani-host
 
 The path repo is symlinked (`options: { symlink: true }`), so most edits inside
-`lagani-vitz/` reach `lagani-host` immediately with **no action needed**:
+`lagani-viz/` reach `lagani-host` immediately with **no action needed**:
 
 - PHP code: models, Filament resources/pages/tables, controllers, migration *files* themselves.
 
 Some things still need a manual step, from `lagani-host/`:
 
-| Changed in lagani-vitz | Run in lagani-host |
+| Changed in lagani-viz | Run in lagani-host |
 |---|---|
-| New/edited migration | `php artisan lagani-vitz:migrate` |
-| `config/lagani-vitz.php` (host already has its own published copy — a frozen snapshot) | `php artisan vendor:publish --tag=lagani-vitz-config --force` |
-| Frontend (`frontend/` Next.js source) | rebuild then republish: `cd ../lagani-vitz/frontend && npm run build`, then `php artisan vendor:publish --tag=lagani-vitz-assets --force` |
-| `composer.json` of the package (new dependency added) | `composer update nepsealpha/lagani-vitz` |
+| New/edited migration | `php artisan lagani-viz:migrate` |
+| `config/lagani-viz.php` (host already has its own published copy — a frozen snapshot) | `php artisan vendor:publish --tag=lagani-viz-config --force` |
+| Frontend (`frontend/` Next.js source) | rebuild then republish: `cd ../lagani-viz/frontend && npm run build`, then `php artisan vendor:publish --tag=lagani-viz-assets --force` |
+| `composer.json` of the package (new dependency added) | `composer update nepsealpha/lagani-viz` |
 
 After any change, a safe blanket step: `php artisan optimize:clear` (clears cached
 config/routes/views so stale cache doesn't hide the update).
@@ -310,11 +310,11 @@ config/routes/views so stale cache doesn't hide the update).
 
 - [ ] PHP 8.2+, Composer installed
 - [ ] `lagani-host` Laravel app created, Filament installed, admin user made
-- [ ] `lagani-vitz` required via path repo in `lagani-host/composer.json`
-- [ ] `LaganiVitzPlugin::make()` attached to the admin panel
-- [ ] `lagani_vitz` and `lagani_host_main` databases created
+- [ ] `lagani-viz` required via path repo in `lagani-host/composer.json`
+- [ ] `LaganiVizPlugin::make()` attached to the admin panel
+- [ ] `lagani_viz` and `lagani_host_main` databases created
 - [ ] `lagani_readonly` role created with SELECT-only grants
-- [ ] `.env` has both `DB_*`/`LAGANI_VITZ_DB_*` and `LAGANI_VITZ_MAIN_DB_*`
-- [ ] `php artisan migrate` (host) and `php artisan lagani-vitz:migrate` (package) both ran
+- [ ] `.env` has both `DB_*`/`LAGANI_VIZ_DB_*` and `LAGANI_VIZ_MAIN_DB_*`
+- [ ] `php artisan migrate` (host) and `php artisan lagani-viz:migrate` (package) both ran
 - [ ] frontend built (`npm run build`) and assets published
 - [ ] `/admin/lagani` and `/lagani` both load

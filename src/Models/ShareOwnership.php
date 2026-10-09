@@ -1,9 +1,9 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Models;
+namespace NepseAlpha\LaganiViz\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use NepseAlpha\LaganiVitz\Support\OwnDatabase;
+use NepseAlpha\LaganiViz\Support\OwnDatabase;
 
 /**
  * @property int $id
@@ -24,7 +24,7 @@ class ShareOwnership extends Model
 
     public function getTable(): string
     {
-        return config('lagani-vitz.database.own.tables.share_ownerships', 'share_ownerships');
+        return config('lagani-viz.database.own.tables.share_ownerships', 'share_ownerships');
     }
 
     public function getConnectionName(): ?string

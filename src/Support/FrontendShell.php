@@ -1,6 +1,6 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Support;
+namespace NepseAlpha\LaganiViz\Support;
 
 /**
  * Locates the pages of the Next.js static export (`next build` with
@@ -12,7 +12,7 @@ namespace NepseAlpha\LaganiVitz\Support;
  *               navigation (`/plan/index.txt`); without them every link click
  *               degrades to a full page load.
  * Hashed assets under `_next/` are served by the web server from
- * `public/vendor/lagani-vitz`, never by PHP.
+ * `public/vendor/lagani-viz`, never by PHP.
  */
 class FrontendShell
 {

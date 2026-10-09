@@ -2,12 +2,12 @@
 // ----------------
 // prod: `next build` writes a fully static site (`output: 'export'`). Laravel serves the
 //       *.html files at /lagani/*; the hashed JS/CSS under _next/ are published to
-//       public/vendor/lagani-vitz (php artisan vendor:publish --tag=lagani-vitz-assets) and
+//       public/vendor/lagani-viz (php artisan vendor:publish --tag=lagani-viz-assets) and
 //       served by nginx/Valet straight from disk, hence `assetPrefix`.
 // dev:  `next dev` on :3100. The browser talks to Next, and Next proxies /lagani/api/* to
 //       Laravel, so the fetch URLs are identical in dev and prod (same origin, no CORS).
 
-const basePath = process.env.LAGANI_BASE_PATH ?? '/lagani'; // must equal config('lagani-vitz.frontend.path')
+const basePath = process.env.LAGANI_BASE_PATH ?? '/lagani'; // must equal config('lagani-viz.frontend.path')
 const isDev = process.env.NODE_ENV !== 'production';
 
 /** @type {import('next').NextConfig} */
@@ -27,7 +27,7 @@ const nextConfig = {
     : {
         output: 'export',
         trailingSlash: true,
-        assetPrefix: process.env.LAGANI_ASSET_PREFIX ?? '/vendor/lagani-vitz',
+        assetPrefix: process.env.LAGANI_ASSET_PREFIX ?? '/vendor/lagani-viz',
       }),
 };
 

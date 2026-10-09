@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use NepseAlpha\LaganiVitz\Support\OwnDatabase;
+use NepseAlpha\LaganiViz\Support\OwnDatabase;
 
 return new class extends Migration
 {
@@ -14,7 +14,7 @@ return new class extends Migration
 
     public function up(): void
     {
-        Schema::create(config('lagani-vitz.database.own.tables.plans', 'lagani_plans'), function (Blueprint $table) {
+        Schema::create(config('lagani-viz.database.own.tables.plans', 'lagani_plans'), function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
@@ -32,6 +32,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists(config('lagani-vitz.database.own.tables.plans', 'lagani_plans'));
+        Schema::dropIfExists(config('lagani-viz.database.own.tables.plans', 'lagani_plans'));
     }
 };

@@ -1,5 +1,5 @@
 {
-  "name": "nepsealpha/lagani-vitz",
+  "name": "nepsealpha/lagani-viz",
   "description": "Lagani (investment) plans: Filament admin panel plugin plus a Next.js frontend served by Laravel.",
   "type": "library",
   "keywords": ["laravel", "filament", "nextjs", "lagani"],
@@ -14,13 +14,13 @@
   },
   "autoload": {
     "psr-4": {
-      "NepseAlpha\\LaganiVitz\\": "src/"
+      "NepseAlpha\\LaganiViz\\": "src/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "NepseAlpha\\LaganiVitz\\LaganiVitzServiceProvider"
+        "NepseAlpha\\LaganiViz\\LaganiVizServiceProvider"
       ]
     }
   },

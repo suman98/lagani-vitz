@@ -1,6 +1,6 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Support;
+namespace NepseAlpha\LaganiViz\Support;
 
 use RuntimeException;
 
@@ -18,14 +18,14 @@ final class OwnDatabase
      */
     public static function connection(): string
     {
-        $name = config('lagani-vitz.database.own.connection') ?: 'lagani_vitz';
+        $name = config('lagani-viz.database.own.connection') ?: 'lagani_viz';
         $definition = config("database.connections.{$name}");
 
         if (blank($definition['database'] ?? null) && blank($definition['url'] ?? null)) {
             throw new RuntimeException(
-                "The LaganiVitz database is not configured (connection [{$name}]). "
-                .'Set LAGANI_VITZ_DB_HOST, LAGANI_VITZ_DB_DATABASE, LAGANI_VITZ_DB_USERNAME and '
-                .'LAGANI_VITZ_DB_PASSWORD, then run `php artisan lagani-vitz:migrate`.'
+                "The LaganiViz database is not configured (connection [{$name}]). "
+                .'Set LAGANI_VIZ_DB_HOST, LAGANI_VIZ_DB_DATABASE, LAGANI_VIZ_DB_USERNAME and '
+                .'LAGANI_VIZ_DB_PASSWORD, then run `php artisan lagani-viz:migrate`.'
             );
         }
 

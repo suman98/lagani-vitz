@@ -1,6 +1,6 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Filament\Resources\LaganiPlans\Schemas;
+namespace NepseAlpha\LaganiViz\Filament\Resources\LaganiPlans\Schemas;
 
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -8,7 +8,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
-use NepseAlpha\LaganiVitz\Models\LaganiPlan;
+use NepseAlpha\LaganiViz\Models\LaganiPlan;
 
 class LaganiPlanForm
 {

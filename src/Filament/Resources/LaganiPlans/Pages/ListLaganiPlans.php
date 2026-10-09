@@ -1,10 +1,10 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Filament\Resources\LaganiPlans\Pages;
+namespace NepseAlpha\LaganiViz\Filament\Resources\LaganiPlans\Pages;
 
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
-use NepseAlpha\LaganiVitz\Filament\Resources\LaganiPlans\LaganiPlanResource;
+use NepseAlpha\LaganiViz\Filament\Resources\LaganiPlans\LaganiPlanResource;
 
 class ListLaganiPlans extends ListRecords
 {

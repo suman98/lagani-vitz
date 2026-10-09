@@ -1,9 +1,9 @@
 <?php
 
-namespace NepseAlpha\LaganiVitz\Http\Controllers;
+namespace NepseAlpha\LaganiViz\Http\Controllers;
 
 use Illuminate\Http\Response;
-use NepseAlpha\LaganiVitz\Support\FrontendShell;
+use NepseAlpha\LaganiViz\Support\FrontendShell;
 
 class FrontendController
 {
@@ -12,7 +12,7 @@ class FrontendController
         abort_unless(
             $shell->isBuilt(),
             503,
-            'LaganiVitz frontend is not built. Run `npm run build` in the package frontend/ directory.',
+            'LaganiViz frontend is not built. Run `npm run build` in the package frontend/ directory.',
         );
 
         [$file, $status, $contentType] = $shell->resolve($path) ?? abort(404);
