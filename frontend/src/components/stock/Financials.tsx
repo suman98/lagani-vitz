@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getBankingAnnual } from '@/lib/api';
 import { useAsync } from '@/lib/useAsync';
 
@@ -10,43 +10,16 @@ const humanize = (s: string) => s.replace(/([a-z).:,])(?=[A-Z(])/g, '$1 ').repla
 
 // Statement each banking_annual line item belongs to, by its upper `order` bound.
 const SECTIONS = [
-  {
-    last: 39,
-    id: 'balance-sheet',
-    title: 'Balance Sheet',
-    short: 'Balance Sheet',
-  },
-  {
-    last: 64,
-    id: 'income-statement',
-    title: 'Income Statement',
-    short: 'Income Statement',
-  },
-  {
-    last: 79,
-    id: 'comprehensive-income',
-    title: 'Statement of Comprehensive Income',
-    short: 'Comprehensive Income',
-  },
-  {
-    last: 128,
-    id: 'cash-flows',
-    title: 'Statement of Cash Flows',
-    short: 'Cash Flows',
-  },
-  {
-    last: 151,
-    id: 'distributable-profit',
-    title: 'Statement of Distributable Profit or Loss',
-    short: 'Distributable Profit',
-  },
-  {
-    last: Infinity,
-    id: 'miscellaneous',
-    title: 'Miscellaneous',
-    short: 'Miscellaneous',
-  },
+  { last: 39, id: 'balance-sheet', title: 'Balance Sheet', short: 'Balance Sheet' },
+  { last: 64, id: 'income-statement', title: 'Income Statement', short: 'Income Statement' },
+  { last: 79, id: 'comprehensive-income', title: 'Statement of Comprehensive Income', short: 'Comprehensive Income' },
+  { last: 128, id: 'cash-flows', title: 'Statement of Cash Flows', short: 'Cash Flows' },
+  { last: 151, id: 'distributable-profit', title: 'Statement of Distributable Profit or Loss', short: 'Distributable Profit' },
+  { last: Infinity, id: 'miscellaneous', title: 'Miscellaneous', short: 'Miscellaneous' },
 ];
+
+// Headings land at 128px (scroll-mt-32), just under the sticky navbar + statement menu.
+const ACTIVE_LINE = 140;
 
 const sectionOf = (order: number | null) => SECTIONS.find((s) => (order ?? Infinity) <= s.last)!;
 
@@ -64,6 +37,22 @@ export function Financials() {
   useEffect(() => {
     if (ready && location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
   }, [ready]);
+
+  // Active statement = last heading scrolled past the menu; at page bottom, the last one
+  // (short trailing sections never reach the line).
+  const [active, setActive] = useState<string | null>(null);
+  useEffect(() => {
+    if (!ready) return;
+    const headings = SECTIONS.map((s) => document.getElementById(s.id)).filter((el) => el !== null);
+    const update = () => {
+      const atBottom = innerHeight + scrollY >= document.documentElement.scrollHeight - 2;
+      const passed = headings.filter((el) => el.getBoundingClientRect().top <= ACTIVE_LINE);
+      setActive((atBottom ? headings.at(-1) : (passed.at(-1) ?? headings[0]))?.id ?? null);
+    };
+    update();
+    addEventListener('scroll', update, { passive: true });
+    return () => removeEventListener('scroll', update);
+  }, [ready, state]);
 
   if (state.status === 'loading') return <p className="muted">Loading…</p>;
 
@@ -111,7 +100,12 @@ export function Financials() {
                 <li key={s.id} className="shrink-0">
                   <a
                     href={`#${s.id}`}
-                    className="focus-ring block rounded-md border border-line px-3 py-1.5 text-[13px] whitespace-nowrap text-ink/80 transition-colors duration-200 hover:border-forest hover:text-forest"
+                    aria-current={active === s.id ? 'location' : undefined}
+                    className={`focus-ring block rounded-md border px-3 py-1.5 text-[13px] whitespace-nowrap transition-colors duration-200 ${
+                      active === s.id
+                        ? 'border-forest bg-forest font-medium text-white'
+                        : 'border-line text-ink/80 hover:border-forest hover:text-forest'
+                    }`}
                   >
                     {s.short}
                   </a>

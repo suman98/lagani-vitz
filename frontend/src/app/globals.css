@@ -56,8 +56,11 @@ body {
   --radius: 12px;
 }
 
-a {
-  color: inherit;
+/* Layered so Tailwind text-* utilities on links still win. */
+@layer base {
+  a {
+    color: inherit;
+  }
 }
 
 .intro h1,
