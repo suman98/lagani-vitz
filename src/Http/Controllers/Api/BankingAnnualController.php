@@ -27,12 +27,13 @@ class BankingAnnualController
             ->orderBy('id')
             ->get(['order', 'particulars', 'fiscal_year', 'value']);
 
-        // Spreadsheet sub-items (110.1, 110.2) were rounded into the integer `order`
-        // column, so a line item is identified by order + particulars, not order alone.
+        // Particulars repeat across statements (e.g. DueFromNepalRastraBank in balance
+        // sheet and cash flows), so a line item is order + particulars.
         $rows = $records
             ->groupBy(fn ($r) => $r->order.'|'.$r->particulars)
             ->map(fn ($items) => [
-                'order' => $items->first()->order,
+                // pgsql NUMERIC arrives as a string ("110.10").
+                'order' => $items->first()->order === null ? null : (float) $items->first()->order,
                 'particulars' => $items->first()->particulars,
                 'values' => (object) $items->pluck('value', 'fiscal_year')->map($this->clean(...))->all(),
             ])

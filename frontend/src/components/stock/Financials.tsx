@@ -24,7 +24,11 @@ const ACTIVE_LINE = 140;
 const sectionOf = (order: number | null) => SECTIONS.find((s) => (order ?? Infinity) <= s.last)!;
 
 const formatValue = (v: string | null) =>
-  v && /^-?\d+(\.\d+)?$/.test(v) ? Number(v).toLocaleString('en-US', { maximumFractionDigits: 2 }) : (v ?? '');
+  !v || Number(v) === 0
+    ? '-'
+    : /^-?\d+(\.\d+)?$/.test(v)
+      ? Number(v).toLocaleString('en-US', { maximumFractionDigits: 2 })
+      : v;
 
 export function Financials() {
   const router = useRouter();
