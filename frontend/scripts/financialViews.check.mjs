@@ -1,6 +1,15 @@
 // node scripts/financialViews.check.mjs  (Node >= 23.6 strips the .ts types natively)
 import assert from 'node:assert/strict';
-import { commonSize, growthAmount, growthPct, heat, shiftFiscalYear, toNumber } from '../src/lib/financialViews.ts';
+import {
+  commonSize,
+  growthAmount,
+  growthPct,
+  heat,
+  heatColor,
+  perShare,
+  shiftFiscalYear,
+  toNumber,
+} from '../src/lib/financialViews.ts';
 
 assert.equal(toNumber('-1315335'), -1315335);
 assert.equal(toNumber('-'), null);
@@ -25,5 +34,12 @@ assert.equal(commonSize(25, 0), null);
 assert.equal(heat(5, [0, 5, 10]), 0.5);
 assert.equal(heat(7, [7, 7]), null);
 assert.equal(heat(null, [1, 2]), null);
+
+assert.equal(perShare(2000, 10000), 20); // 100 shares
+assert.equal(perShare(2000, null), null);
+
+assert.equal(heatColor(0), 'rgb(248, 105, 107)');
+assert.equal(heatColor(0.5), 'rgb(255, 235, 132)');
+assert.equal(heatColor(1), 'rgb(99, 190, 123)');
 
 console.log('financialViews: ok');

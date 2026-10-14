@@ -9,6 +9,8 @@ import {
   growthAmount,
   growthPct,
   heat,
+  heatColor,
+  perShare,
   shiftFiscalYear,
   toNumber,
   type View,
@@ -38,9 +40,10 @@ const VIEWS: { value: View; label: string }[] = [
   { value: 'growth-amt', label: 'Growth Amt' },
   { value: 'growth-pct', label: 'Growth %' },
   { value: 'common-size', label: 'Common Size %' },
+  { value: 'per-share', label: 'Per Share' },
 ];
 
-// Per-share rows have no meaningful common size.
+// Rows already per share (EPS, NAV per share) have no meaningful common size or per-share value.
 const PER_SHARE = /PerShare$/;
 
 type Row = FinancialStatement['rows'][number];
@@ -140,6 +143,7 @@ export function Financials() {
   const isPct = view === 'growth-pct' || view === 'common-size';
   const totalAssets = rows.find((r) => r.particulars === 'TotalAssets');
   const operatingIncome = rows.find((r) => r.particulars === 'TotalOperatingIncome');
+  const shareCapital = rows.find((r) => r.particulars === 'ShareCapital');
   const num = (row: Row | undefined, fy: string) => toNumber(row?.values[fy]);
 
   // Growth looks up earlier years in the full data, so the oldest shown year still gets one.
@@ -159,6 +163,11 @@ export function Financials() {
         const base = sectionOf(row.order).id === 'balance-sheet' ? totalAssets : operatingIncome;
         return commonSize(v, num(base, fy));
       }
+      case 'per-share': {
+        if (PER_SHARE.test(row.particulars)) return null;
+        const ps = perShare(v, num(shareCapital, fy));
+        return ps === null ? null : ps / rate;
+      }
     }
   };
 
@@ -169,12 +178,8 @@ export function Financials() {
     return n.toLocaleString('en-US', { maximumFractionDigits: Math.abs(n) >= 1000 ? 0 : 2 });
   };
 
-  const heatStyle = (t: number | null): React.CSSProperties | undefined => {
-    if (!heatmap || t === null) return undefined;
-    const strength = Math.round(Math.abs(t - 0.5) * 2 * 28);
-    const color = t < 0.5 ? 'var(--color-loss)' : 'var(--color-gain)';
-    return { backgroundColor: `color-mix(in srgb, ${color} ${strength}%, transparent)` };
-  };
+  const heatStyle = (t: number | null): React.CSSProperties | undefined =>
+    heatmap && t !== null ? { backgroundColor: heatColor(t) } : undefined;
 
   return (
     <section aria-labelledby="financials-title">
@@ -308,15 +313,16 @@ export function Financials() {
               ))}
             </ul>
           </nav>
-          <div className="overflow-x-auto rounded-md border border-line">
-            <table className="w-full text-sm">
+          {/* Sized to its columns, so fewer years mean a narrower table, not wider gaps. */}
+          <div className="w-fit max-w-full overflow-x-auto rounded-md border border-line">
+            <table className="text-sm">
               <thead className="bg-surface">
                 <tr>
                   <th scope="col" className="sticky left-0 bg-surface px-4 py-3 text-left font-medium text-muted">
                     Particulars
                   </th>
                   {shown.map((fy) => (
-                    <th key={fy} scope="col" className="px-4 py-3 text-right font-medium whitespace-nowrap text-ink">
+                    <th key={fy} scope="col" className="min-w-32 px-4 py-3 text-right font-medium whitespace-nowrap text-ink">
                       {fy}
                     </th>
                   ))}
@@ -341,7 +347,7 @@ export function Financials() {
                     <tr key={i} className="border-t border-line">
                       <th
                         scope="row"
-                        className="sticky left-0 min-w-44 bg-white px-4 py-2.5 text-left font-normal text-ink sm:min-w-64"
+                        className="sticky left-0 w-44 bg-white px-4 py-2.5 text-left font-normal text-ink sm:w-80"
                       >
                         {humanize(row.particulars)}
                       </th>
