@@ -50,7 +50,7 @@ export interface FinancialStatement {
   symbol: string | null;
   /** Latest first. */
   fiscal_years: string[];
-  rows: { particulars: string; values: Record<string, string | null> }[];
+  rows: { order: number | null; particulars: string; values: Record<string, string | null> }[];
 }
 
 export async function getBankingAnnual(symbol: string | null, signal?: AbortSignal): Promise<FinancialStatement> {

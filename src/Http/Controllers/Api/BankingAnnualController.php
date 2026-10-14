@@ -32,6 +32,7 @@ class BankingAnnualController
         $rows = $records
             ->groupBy(fn ($r) => $r->order.'|'.$r->particulars)
             ->map(fn ($items) => [
+                'order' => $items->first()->order,
                 'particulars' => $items->first()->particulars,
                 'values' => (object) $items->pluck('value', 'fiscal_year')->map($this->clean(...))->all(),
             ])

@@ -7,7 +7,19 @@ import { useAsync } from '@/lib/useAsync';
 // "NetInterest,FeeAndCommissionIncome" -> "Net Interest, Fee And Commission Income"
 const humanize = (s: string) => s.replace(/([a-z).:,])(?=[A-Z(])/g, '$1 ').replace(/\s*&\s*/g, ' & ');
 
-const formatValue = (v: string | null) =>
+// Statement each banking_annual line item belongs to, by its upper `order` bound.
+const SECTIONS = [
+  { last: 39, title: 'Balance Sheet' },
+  { last: 64, title: 'Income Statement' },
+  { last: 79, title: 'Statement of Comprehensive Income' },
+  { last: 128, title: 'Statement of Cash Flows' },
+  { last: 151, title: 'Statement of Distributable Profit or Loss' },
+  { last: Infinity, title: 'Miscellaneous' },
+];
+
+const sectionOf = (order: number | null) => SECTIONS.find((s) => (order ?? Infinity) <= s.last)!.title;
+
+const formatValue =(v: string | null) =>
   v && /^-?\d+(\.\d+)?$/.test(v) ? Number(v).toLocaleString('en-US', { maximumFractionDigits: 2 }) : (v ?? '');
 
 export function Financials() {
@@ -69,7 +81,18 @@ export function Financials() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, i) => (
+              {rows.flatMap((row, i) => [
+                sectionOf(row.order) !== (i > 0 ? sectionOf(rows[i - 1].order) : null) && (
+                  <tr key={`section-${i}`} className="border-t border-line bg-surface">
+                    <th
+                      scope="colgroup"
+                      colSpan={years.length + 1}
+                      className="sticky left-0 px-4 pt-5 pb-2 text-left text-xs font-semibold tracking-wide text-forest uppercase"
+                    >
+                      {sectionOf(row.order)}
+                    </th>
+                  </tr>
+                ),
                 <tr key={i} className="border-t border-line">
                   <th scope="row" className="sticky left-0 min-w-44 bg-white sm:min-w-64 px-4 py-2.5 text-left font-normal text-ink">
                     {humanize(row.particulars)}
@@ -79,8 +102,8 @@ export function Financials() {
                       {formatValue(row.values[fy])}
                     </td>
                   ))}
-                </tr>
-              ))}
+                </tr>,
+              ])}
             </tbody>
           </table>
         </div>
