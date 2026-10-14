@@ -44,6 +44,7 @@ class BankingAnnualController
             'symbol' => $symbol,
             'fiscal_years' => $records->pluck('fiscal_year')->unique()->sortDesc()->values(),
             'rows' => $rows,
+            'npr_per_usd' => ((float) config('lagani-viz.currency.npr_per_usd')) ?: null,
         ]])->header('Cache-Control', 'public, max-age=60');
     }
 

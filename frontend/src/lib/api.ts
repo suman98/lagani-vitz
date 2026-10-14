@@ -51,6 +51,8 @@ export interface FinancialStatement {
   /** Latest first. */
   fiscal_years: string[];
   rows: { order: number | null; particulars: string; values: Record<string, string | null> }[];
+  /** Null when no rate is configured. */
+  npr_per_usd: number | null;
 }
 
 export async function getBankingAnnual(symbol: string | null, signal?: AbortSignal): Promise<FinancialStatement> {
