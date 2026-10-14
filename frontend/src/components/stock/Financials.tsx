@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import { getBankingAnnual } from '@/lib/api';
 import { useAsync } from '@/lib/useAsync';
 
@@ -9,17 +10,47 @@ const humanize = (s: string) => s.replace(/([a-z).:,])(?=[A-Z(])/g, '$1 ').repla
 
 // Statement each banking_annual line item belongs to, by its upper `order` bound.
 const SECTIONS = [
-  { last: 39, title: 'Balance Sheet' },
-  { last: 64, title: 'Income Statement' },
-  { last: 79, title: 'Statement of Comprehensive Income' },
-  { last: 128, title: 'Statement of Cash Flows' },
-  { last: 151, title: 'Statement of Distributable Profit or Loss' },
-  { last: Infinity, title: 'Miscellaneous' },
+  {
+    last: 39,
+    id: 'balance-sheet',
+    title: 'Balance Sheet',
+    short: 'Balance Sheet',
+  },
+  {
+    last: 64,
+    id: 'income-statement',
+    title: 'Income Statement',
+    short: 'Income Statement',
+  },
+  {
+    last: 79,
+    id: 'comprehensive-income',
+    title: 'Statement of Comprehensive Income',
+    short: 'Comprehensive Income',
+  },
+  {
+    last: 128,
+    id: 'cash-flows',
+    title: 'Statement of Cash Flows',
+    short: 'Cash Flows',
+  },
+  {
+    last: 151,
+    id: 'distributable-profit',
+    title: 'Statement of Distributable Profit or Loss',
+    short: 'Distributable Profit',
+  },
+  {
+    last: Infinity,
+    id: 'miscellaneous',
+    title: 'Miscellaneous',
+    short: 'Miscellaneous',
+  },
 ];
 
-const sectionOf = (order: number | null) => SECTIONS.find((s) => (order ?? Infinity) <= s.last)!.title;
+const sectionOf = (order: number | null) => SECTIONS.find((s) => (order ?? Infinity) <= s.last)!;
 
-const formatValue =(v: string | null) =>
+const formatValue = (v: string | null) =>
   v && /^-?\d+(\.\d+)?$/.test(v) ? Number(v).toLocaleString('en-US', { maximumFractionDigits: 2 }) : (v ?? '');
 
 export function Financials() {
@@ -27,6 +58,12 @@ export function Financials() {
   const pathname = usePathname();
   const symbol = useSearchParams().get('symbol');
   const { state, retry } = useAsync((signal) => getBankingAnnual(symbol, signal), [symbol]);
+
+  // Rows arrive after the browser's own #hash scroll, so a deep link needs a second jump.
+  const ready = state.status === 'ready';
+  useEffect(() => {
+    if (ready && location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+  }, [ready]);
 
   if (state.status === 'loading') return <p className="muted">Loading…</p>;
 
@@ -42,6 +79,7 @@ export function Financials() {
   }
 
   const { symbols, fiscal_years: years, rows } = state.data;
+  const sections = SECTIONS.filter((s) => rows.some((r) => sectionOf(r.order) === s));
 
   return (
     <section aria-labelledby="financials-title">
@@ -66,47 +104,67 @@ export function Financials() {
       {rows.length === 0 ? (
         <p className="muted">No financial data for this symbol.</p>
       ) : (
-        <div className="overflow-x-auto rounded-md border border-line">
-          <table className="w-full text-sm">
-            <thead className="bg-surface">
-              <tr>
-                <th scope="col" className="sticky left-0 bg-surface px-4 py-3 text-left font-medium text-muted">
-                  Particulars
-                </th>
-                {years.map((fy) => (
-                  <th key={fy} scope="col" className="px-4 py-3 text-right font-medium whitespace-nowrap text-ink">
-                    {fy}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.flatMap((row, i) => [
-                sectionOf(row.order) !== (i > 0 ? sectionOf(rows[i - 1].order) : null) && (
-                  <tr key={`section-${i}`} className="border-t border-line bg-surface">
-                    <th
-                      scope="colgroup"
-                      colSpan={years.length + 1}
-                      className="sticky left-0 px-4 pt-5 pb-2 text-left text-xs font-semibold tracking-wide text-forest uppercase"
-                    >
-                      {sectionOf(row.order)}
-                    </th>
-                  </tr>
-                ),
-                <tr key={i} className="border-t border-line">
-                  <th scope="row" className="sticky left-0 min-w-44 bg-white sm:min-w-64 px-4 py-2.5 text-left font-normal text-ink">
-                    {humanize(row.particulars)}
+        <>
+          <nav aria-label="Statements" className="sticky top-16 z-10 -mx-1 mb-4 bg-white px-1 py-2">
+            <ul className="flex gap-2 overflow-x-auto [scrollbar-width:thin]">
+              {sections.map((s) => (
+                <li key={s.id} className="shrink-0">
+                  <a
+                    href={`#${s.id}`}
+                    className="focus-ring block rounded-md border border-line px-3 py-1.5 text-[13px] whitespace-nowrap text-ink/80 transition-colors duration-200 hover:border-forest hover:text-forest"
+                  >
+                    {s.short}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="overflow-x-auto rounded-md border border-line">
+            <table className="w-full text-sm">
+              <thead className="bg-surface">
+                <tr>
+                  <th scope="col" className="sticky left-0 bg-surface px-4 py-3 text-left font-medium text-muted">
+                    Particulars
                   </th>
                   {years.map((fy) => (
-                    <td key={fy} className="px-4 py-2.5 text-right whitespace-nowrap tabular-nums text-ink">
-                      {formatValue(row.values[fy])}
-                    </td>
+                    <th key={fy} scope="col" className="px-4 py-3 text-right font-medium whitespace-nowrap text-ink">
+                      {fy}
+                    </th>
                   ))}
-                </tr>,
-              ])}
-            </tbody>
-          </table>
-        </div>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.flatMap((row, i) => [
+                  sectionOf(row.order) !== (i > 0 ? sectionOf(rows[i - 1].order) : null) && (
+                    <tr key={`section-${i}`} className="border-t border-forest/30 bg-forest/10">
+                      <th
+                        id={sectionOf(row.order).id}
+                        scope="colgroup"
+                        colSpan={years.length + 1}
+                        className="scroll-mt-32 px-4 py-3 text-left text-[15px] font-semibold tracking-tight text-forest-dark shadow-[inset_4px_0_0_var(--color-forest)]"
+                      >
+                        {sectionOf(row.order).title}
+                      </th>
+                    </tr>
+                  ),
+                  <tr key={i} className="border-t border-line">
+                    <th
+                      scope="row"
+                      className="sticky left-0 min-w-44 bg-white sm:min-w-64 px-4 py-2.5 text-left font-normal text-ink"
+                    >
+                      {humanize(row.particulars)}
+                    </th>
+                    {years.map((fy) => (
+                      <td key={fy} className="px-4 py-2.5 text-right whitespace-nowrap tabular-nums text-ink">
+                        {formatValue(row.values[fy])}
+                      </td>
+                    ))}
+                  </tr>,
+                ])}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </section>
   );
