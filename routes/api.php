@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use NepseAlpha\LaganiViz\Http\Controllers\Api\BankingAnnualController;
 use NepseAlpha\LaganiViz\Http\Controllers\Api\PlanController;
 
 Route::get('plans', [PlanController::class, 'index'])->name('plans.index');
 Route::get('plans/{slug}', [PlanController::class, 'show'])->name('plans.show');
+Route::get('banking-annual', BankingAnnualController::class)->name('banking-annual');

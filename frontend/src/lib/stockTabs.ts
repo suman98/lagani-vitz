@@ -1,0 +1,15 @@
+export const STOCK_TABS = [
+  { slug: '', label: 'Summary' },
+  { slug: 'financials', label: 'Financials' },
+  { slug: 'ratios', label: 'Ratios' },
+  { slug: 'valuation', label: 'Valuation' },
+  { slug: 'announcement', label: 'Announcement' },
+  { slug: 'news', label: 'News' },
+  { slug: 'credit-rating', label: 'Credit Rating' },
+  { slug: 'investment', label: 'Investment' },
+  { slug: 'price-key-drivers', label: 'Price Key Drivers' },
+  { slug: 'key-schedules', label: 'Key Schedules' },
+  { slug: 'peers', label: 'Peers' },
+  { slug: 'forecast', label: 'Forecast' },
+  { slug: 'investment-calendar', label: 'Investment Calendar' },
+];

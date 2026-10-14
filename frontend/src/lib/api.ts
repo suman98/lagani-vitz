@@ -45,5 +45,18 @@ export async function getPlan(slug: string, signal?: AbortSignal): Promise<Plan>
   return (await get<{ data: Plan }>(`/plans/${encodeURIComponent(slug)}`, signal)).data;
 }
 
-export const formatNpr = (amount: number) =>
+export interface FinancialStatement {
+  symbols: string[];
+  symbol: string | null;
+  /** Latest first. */
+  fiscal_years: string[];
+  rows: { particulars: string; values: Record<string, string | null> }[];
+}
+
+export async function getBankingAnnual(symbol: string | null, signal?: AbortSignal): Promise<FinancialStatement> {
+  const query = symbol ? `?symbol=${encodeURIComponent(symbol)}` : '';
+  return (await get<{ data: FinancialStatement }>(`/banking-annual${query}`, signal)).data;
+}
+
+export const formatNpr =(amount: number) =>
   new Intl.NumberFormat('en-NP', { style: 'currency', currency: 'NPR', maximumFractionDigits: 0 }).format(amount);

@@ -108,6 +108,7 @@ return [
             'tables' => [
                 'plans' => 'lagani_plans',
                 'share_ownerships' => 'share_ownerships',
+                'banking_annual' => 'banking_annual',
             ],
         ],
 
